@@ -41,7 +41,7 @@ jobs:
           retention-days: 30
 
       - name: Build image
-        run: make build-image TAG=${{ github.event.pull_request.number }}
+        run: echo "NUMBER IS = ${{ github.event.pull_request.number }}" && make build-image
 
   push-image:
     if: github.event_name == 'push'
@@ -56,4 +56,4 @@ jobs:
           password: ${{ secrets.APP_QUAY_TOKEN }}
 
       - name: Push image to Quay.io
-        run: make push-image TAG=${{ github.event.pull_request.number }}
+        run: make push-image
