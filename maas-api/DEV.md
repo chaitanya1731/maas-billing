@@ -1,6 +1,6 @@
 ## Environment Setup
 
-### Prerequisites
+## Prerequisites
 
 - kubectl
 - jq
