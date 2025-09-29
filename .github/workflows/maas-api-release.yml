@@ -35,4 +35,4 @@ jobs:
           password: ${{ secrets.APP_QUAY_TOKEN }}
 
       - name: Build and Push image to Quay.io
-        run: make build-push-image TAG=${{ github.ref_name }}
+        run: make build-push-image REPO=quay.io/chkulkar/maas-api TAG=${{ github.ref_name }}
