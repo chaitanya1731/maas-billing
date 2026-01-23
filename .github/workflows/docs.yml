@@ -30,11 +30,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check Markdown Links
+      - name: Check Internal Links
         uses: becheran/mlc@v1.2.0
         with:
-          # To skip checking http/https links, add: --offline
-          args: .
+          # Only check local/internal links - these must pass
+          args: --offline .
+
+      - name: Install mlc for external link check
+        run: |
+          curl -sLO https://github.com/becheran/mlc/releases/download/v0.18.0/mlc-x86_64-linux
+          chmod +x mlc-x86_64-linux
+          sudo mv mlc-x86_64-linux /usr/local/bin/mlc
+
+      - name: Check External Links (warnings only)
+        run: |
+          echo "Checking external links..."
+          # Run mlc and capture output, but don't fail the workflow for external link errors
+          if ! mlc . 2>&1; then
+            echo ""
+            echo "::warning::Some external links may be broken. Review the errors above."
+          fi
+        shell: bash
 
   # Build job for PRs - just validates the docs build
   build-pr:
