@@ -18,6 +18,11 @@ on:
 permissions:
   contents: write
 
+env:
+  # Set to 'false' to allow broken external links to show as warnings instead of failures
+  # Useful when external documentation sites (e.g., Red Hat docs) are temporarily down
+  FAIL_ON_BROKEN_LINKS: 'true'
+
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -30,10 +35,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check Markdown Links
+      - name: Check Internal Links
         uses: becheran/mlc@v1.2.0
         with:
-          # To skip checking http/https links, add: --offline
+          args: --offline .
+
+      - name: Check External Links
+        uses: becheran/mlc@v1.2.0
+        # When FAIL_ON_BROKEN_LINKS is 'false', external link failures show as warnings
+        continue-on-error: ${{ env.FAIL_ON_BROKEN_LINKS != 'true' }}
+        with:
           args: .
 
   # Build job for PRs - just validates the docs build
